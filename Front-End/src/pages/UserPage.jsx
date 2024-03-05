@@ -1,9 +1,10 @@
+import UserHeader from "../components/UserHeader"
 
 
 const UserPage = () => {
     return (
         <>
-        <p>UserPage</p>
+        <UserHeader />
         </>
     )
 }
