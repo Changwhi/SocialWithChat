@@ -24,14 +24,14 @@ const UserHeader = () => {
   const THREADS = "Threads"
   const REPLIES = "Replies"
   
-  const alert = useToast();
+  const toast = useToast();
   
   const copyURL = () => {
     const currentURL = window.location.href;
     navigator.clipboard.writeText(currentURL).then(() => {
-      alert({
+      toast({
         title: SUCCESS,
-        status: SUCCESS,
+        status: "success",
         description: COPIED,
         duration: 3000,
         isClosable: true,
