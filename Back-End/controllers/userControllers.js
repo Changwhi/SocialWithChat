@@ -8,7 +8,7 @@ const singUpUser = async (req, res) => {
     const user = await User.findOne({ $or: [{ email }, { username }] });
 
     if (user) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ error: "User already exists" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -33,11 +33,11 @@ const singUpUser = async (req, res) => {
         username: newUser.username,
       });
     } else {
-      res.status(400).json({ message: "Invalid user data" });
+      res.status(400).json({ error: "Invalid user data" });
     }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log("Error in signUpUser: ", error.message);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.log("Error in signUpUser: ", err.message);
   }
 };
 
@@ -51,7 +51,7 @@ const loginUser = async (req, res) => {
     );
 
     if (!user || !isPasswordCorrect) {
-      return res.status(400).json({ message: "Invalid Login information" });
+      return res.status(400).json({ error: "Invalid Login information" });
     }
 
     generateTokenAndSetCookie(user._id, res);
@@ -63,9 +63,9 @@ const loginUser = async (req, res) => {
       email: user.email,
       username: user.username,
     });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log("Error in loginUser: ", error.message);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.log("Error in loginUser: ", err.message);
   }
 };
 
@@ -73,9 +73,9 @@ const logoutUser = async (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 1 });
     res.status(200).json({ messager: "User logged out successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log("Error in logoutUser: ", error.message);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.log("Error in logoutUser: ", err.message);
   }
 };
 
@@ -105,9 +105,9 @@ const followAndUnfollow = async (req, res) => {
         await User.findByIdAndUpdate(id, { $push: {followers: req.user._id}})
         res.status(200).json({message:"User follow successfully"})
     }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log("Error in follow: ", error.message);
+  } catch (err) {
+    res.status(500).json({ error : err.message });
+    console.log("Error in follow: ", err.message);
   }
 };
 
@@ -135,9 +135,9 @@ const updateUser = async (req, res) =>{
 
         res.status(200).json({message:"Profile updated successfully"})
         
-    } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log("Error updateUser: ", error.message);
+    } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.log("Error updateUser: ", err.message);
     }
 }
 
@@ -147,9 +147,9 @@ const getProfile = async(req, res) =>{
         const user = await User.findOne({username}).select("-updatedAt").select("-password")
         if(!user) return res.status(400).json({message:"User does not exist"})
         res.status(200).json(user)
-    } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log("Error getProfile: ", error.message);
+    } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.log("Error getProfile: ", err.message);
     }
 }
 
