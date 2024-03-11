@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
+import { v2 as cloudinary } from "cloudinary";
 
 const singUpUser = async (req, res) => {
   try {
@@ -31,6 +32,8 @@ const singUpUser = async (req, res) => {
         name: newUser.name,
         email: newUser.email,
         username: newUser.username,
+        bio: newUser.bio,
+        profilePic: newUser.profilePic,
       });
     } else {
       res.status(400).json({ error: "Invalid user data" });
@@ -62,6 +65,8 @@ const loginUser = async (req, res) => {
       name: user.name,
       email: user.email,
       username: user.username,
+      bio: user.bio,
+      profilePic: user.profilePic,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -113,18 +118,27 @@ const followAndUnfollow = async (req, res) => {
 
 const updateUser = async (req, res) =>{
     try {
-        const { name, email, username, password, profilePic, bio } = req.body;
+        const { name, email, username, password, bio } = req.body;
+        let {profilePic} = req.body;
         const userId = req.user._id;
 
         let user = await User.findById(userId);
         if (!user) return res.status(400).json({message:"User does not exist"});
-        
+        if (req.params.id !== userId.toString())
+			return res.status(400).json({ error: "You cannot update other user's profile" });
+
         if(password){
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
             user.password = hashedPassword;
         }
-
+        if(profilePic){
+          if(user.profilePic){
+            await cloudinary.uploader.destroy(user.profilePic.split("/").pop().split(".")[0]);
+          }
+          const uploadedResponse = await cloudinary.uploader.upload(profilePic);
+          profilePic = uploadedResponse.secure_url;
+        }
         user.name = name || user.name;
         user.email = email || user.email;
         user.username = username || user.username;
@@ -133,7 +147,9 @@ const updateUser = async (req, res) =>{
 
         user = await user.save();
 
-        res.status(200).json({message:"Profile updated successfully"})
+        //get rid of password to hide
+        user.password = null;
+        res.status(200).json(user)
         
     } catch (err) {
     res.status(500).json({ error: err.message });
