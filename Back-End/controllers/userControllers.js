@@ -161,7 +161,7 @@ const getProfile = async(req, res) =>{
     try {
         const {username} = req.params;
         const user = await User.findOne({username}).select("-updatedAt").select("-password")
-        if(!user) return res.status(400).json({message:"User does not exist"})
+        if(!user) return res.status(400).json({error:"User does not exist"})
         res.status(200).json(user)
     } catch (err) {
     res.status(500).json({ error: err.message });
