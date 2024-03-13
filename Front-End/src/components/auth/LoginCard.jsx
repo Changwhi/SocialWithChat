@@ -27,8 +27,10 @@ export default function LoginCard() {
   const [password, setPassword] = useState("")
   const showToast = useShowToast();
   const setUser = useSetRecoilState(userAtom);
+  const [loading, setLoading] = useState(false);
 
   const logInHandler = async() => {
+      setLoading(true);
       try {
           const info = {
               username: id,
@@ -50,6 +52,8 @@ export default function LoginCard() {
           setUser(responseData);
       } catch (error) {
         showToast("Error", error, 'error');
+      } finally {
+        setLoading(false);
       }
   }
   return (
@@ -104,6 +108,7 @@ export default function LoginCard() {
                   bg: useColorModeValue("gray.700", "gray.800"),
                 }}
                 onClick={logInHandler}
+                isLoading={loading}
                 >
                 Login
               </Button>
