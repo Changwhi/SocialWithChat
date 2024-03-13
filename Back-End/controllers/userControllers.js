@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
 import { v2 as cloudinary } from "cloudinary";
+import mongoose from "mongoose";
 
 const singUpUser = async (req, res) => {
   try {
@@ -159,8 +160,16 @@ const updateUser = async (req, res) =>{
 
 const getProfile = async(req, res) =>{
     try {
-        const {username} = req.params;
-        const user = await User.findOne({username}).select("-updatedAt").select("-password")
+        //find user profile based on name or user id
+        const {userinfo} = req.params;
+        let user;
+
+        if(mongoose.Types.ObjectId.isValid(userinfo)){
+          user = await User.findOne({_id:userinfo}).select("-password").select("-updatedAt")
+        } else{
+          user = await User.findOne({username: userinfo}).select("-password").select("-updatedAt")
+        }
+
         if(!user) return res.status(400).json({error:"User does not exist"})
         res.status(200).json(user)
     } catch (err) {
