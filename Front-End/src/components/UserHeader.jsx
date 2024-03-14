@@ -34,7 +34,7 @@ const UserHeader = ({ user }) => {
   const showToast = useShowToast();
   const currentUser = useRecoilValue(userAtom); // this is the logged in user
   const [following, setFollowing] = useState(
-    user.followers.includes(currentUser._id)
+    user.followers.includes(currentUser?._id)
   );
   const [updating, setUpdating] = useState(false);
 
@@ -49,6 +49,7 @@ const UserHeader = ({ user }) => {
   const followHandler = async() => {
     if(!currentUser){ 
       showToast(ERROR, NOT_LOGIN, 'error')
+      return
     }
     if(updating) return;
     setUpdating(true);
@@ -67,7 +68,7 @@ const UserHeader = ({ user }) => {
         user.followers.pop();
       } else {
         showToast(SUCCESS, `followed ${user.name}`, "success");
-        user.followers.push(currentUser._id);
+        user.followers.push(currentUser?._id);
       }
       setFollowing((follow) => !follow);
 
@@ -122,12 +123,12 @@ const UserHeader = ({ user }) => {
           </Box>
         </Flex>
         <Text>{user.bio}</Text>
-        {currentUser._id === user._id && (
+        {currentUser?._id === user._id && (
           <Link as={RouterLink} to="/update">
             <Button size={"sm"}>Update Profile</Button>
           </Link>
         )}
-        {currentUser._id !== user._id && (
+        {currentUser?._id !== user._id && (
           <Button onClick={followHandler} size={"sm"} isLoading={updating}>{following ? "Unfollow" : "Follow"}</Button>
         )}
         <Flex w={"full"} justifyContent={"space-between"}>
