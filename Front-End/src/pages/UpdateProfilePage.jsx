@@ -44,8 +44,9 @@ export default function UpdateProfilePage() {
         body: JSON.stringify({ ...input, profilePic: imgUrl }),
       });
       const responseData = await response.json();
-      if(responseData.err){
+      if(responseData.error){
         showToast("Error", responseData.error, 'error');
+        return;
       }
       showToast("Success", "Profile updated!", 'success');
       setUser(responseData);
