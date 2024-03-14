@@ -32,7 +32,7 @@ const createPost = async (req, res) => {
 
     const newPost = new Post({ postedBy, text, img });
     await newPost.save();
-    res.status(201).json({ message: "Post created successfully", newPost });
+    res.status(201).json( newPost );
   } catch (err) {
     res.status(500).json({ error: err.message });
     console.log("Error in createPost: ", err.message);
@@ -109,7 +109,7 @@ const replyToPost = async (req, res) => {
     const { text } = req.body;
     const postId = req.params.postId;
     const userId = req.user._id;
-    const userProfilePic = req.user.userProfilePic;
+    const userProfilePic = req.user.profilePic;
     const username = req.user.username;
     if (!text) {
       return res.status(400).json({ error: "Text is requried" });
@@ -128,7 +128,7 @@ const replyToPost = async (req, res) => {
     const reply = { userId, text, userProfilePic, username };
     post.replies.push(reply);
     await post.save();
-    res.status(200).json({ message: "Reply to a post successfilly" });
+    res.status(200).json(reply);
   } catch (err) {
     res.status(500).json({ error: err.message });
     console.log("Error in replyToPost: ", err.message);
@@ -160,7 +160,6 @@ const getUserPosts = async (req, res) => {
       return res.status(404).json({ error: "User can not found" });
     }
     const posts = await Post.find({postedBy: user._id}).sort({createdAt: -1});
-
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json({ error: err.message });
