@@ -5,14 +5,16 @@ import Actions from "./Actions";
 import useShowToast from "../hooks/useShowToast";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { formatDistanceToNow } from "date-fns";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "./atoms/userAtom";
+import postsAtom from "./atoms/postsAtom";
 
 const Post = ({ post, postedBy }) => {
   const [user, setUser] = useState(null);
   const showToast = useShowToast();
   const navigate = useNavigate();
   const currentUser = useRecoilValue(userAtom);
+  const [posts, setPosts] = useRecoilState(postsAtom);
 
   useEffect(() => {
     const getUser = async () => {
@@ -46,6 +48,7 @@ const Post = ({ post, postedBy }) => {
         return;
       }
       showToast("Success", "Post deleted", "success");
+      setPosts(posts.filter((p) => p._id !== post._id));
     } catch (error) {
       showToast("Error", error, "error");
     }
@@ -87,8 +90,8 @@ const Post = ({ post, postedBy }) => {
                   name="Changwhi OH"
                   src={post.replies[1].userProfilePic}
                   position={"absolute"}
-                  top={"0px"}
-                  left={"15px"}
+                  bottom={"0px"}
+                  right={"-5px"}
                   padding={"2px"}
                 />
               )}
@@ -99,8 +102,8 @@ const Post = ({ post, postedBy }) => {
                   name="Changwhi OH"
                   src={post.replies[2].userProfilePic}
                   position={"absolute"}
-                  top={"0px"}
-                  left={"15px"}
+                  bottom={"0px"}
+                  left={"4px"}
                   padding={"2px"}
                 />
               )}
@@ -132,7 +135,11 @@ const Post = ({ post, postedBy }) => {
                 </Text>
 
                 {currentUser?._id === user._id && (
-                  <DeleteIcon size={20} cursor={"pointer"} onClick={deletePostHandler} />
+                  <DeleteIcon
+                    size={20}
+                    cursor={"pointer"}
+                    onClick={deletePostHandler}
+                  />
                 )}
               </Flex>
             </Flex>
