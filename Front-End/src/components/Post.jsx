@@ -3,14 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Actions from "./Actions";
 import useShowToast from "../hooks/useShowToast";
-
-import {formatDistanceToNow} from "date-fns"
+import { DeleteIcon } from "@chakra-ui/icons";
+import { formatDistanceToNow } from "date-fns";
+import { useRecoilValue } from "recoil";
+import userAtom from "./atoms/userAtom";
 
 const Post = ({ post, postedBy }) => {
-  const [liked, setLiked] = useState(false);
   const [user, setUser] = useState(null);
   const showToast = useShowToast();
   const navigate = useNavigate();
+  const currentUser = useRecoilValue(userAtom);
 
   useEffect(() => {
     const getUser = async () => {
@@ -30,10 +32,29 @@ const Post = ({ post, postedBy }) => {
     getUser();
   }, [postedBy, showToast]);
 
+  const deletePostHandler = async (e) => {
+    e.preventDefault();
+    try {
+      if (!window.confirm("Are you sure you want to delete this post?")) return;
+
+      const response = await fetch(`/api/posts/${post._id}`, {
+        method: "DELETE",
+      });
+      const responseData = await response.json();
+      if (responseData.error) {
+        showToast("Error", response.error, "error");
+        return;
+      }
+      showToast("Success", "Post deleted", "success");
+    } catch (error) {
+      showToast("Error", error, "error");
+    }
+  };
+
   if (!user) return null;
   return (
     <>
-      <Link to={`${user.username}/post/${post._id}`}>
+      <Link to={`/${user.username}/post/${post._id}`}>
         <Flex gap={3} mb={4} py={5}>
           <Flex flexDirection={"column"} alignItems={"center"}>
             <Avatar
@@ -101,9 +122,18 @@ const Post = ({ post, postedBy }) => {
                 <Image src="/verified.png" w={4} h={4} ml={1} />
               </Flex>
               <Flex gap={4} alignItems={"center"}>
-                <Text fontSize={"xs"}  width={36} textAlign={"right"} color={"gray.light"}>
-                {formatDistanceToNow(new Date(post.createdAt))} ago
+                <Text
+                  fontSize={"xs"}
+                  width={36}
+                  textAlign={"right"}
+                  color={"gray.light"}
+                >
+                  {formatDistanceToNow(new Date(post.createdAt))} ago
                 </Text>
+
+                {currentUser?._id === user._id && (
+                  <DeleteIcon size={20} cursor={"pointer"} onClick={deletePostHandler} />
+                )}
               </Flex>
             </Flex>
             <Text fontSize={"sm"}>{post.text}</Text>
@@ -118,22 +148,7 @@ const Post = ({ post, postedBy }) => {
               </Box>
             )}
             <Flex gap={3} my={1}>
-              <Actions liked={liked} setLiked={setLiked}></Actions>
-            </Flex>
-
-            <Flex gap={2} alignItems={"center"}>
-              <Text color={"gray.light"} fontSize={"sm"}>
-                {post.replies.length} replies
-              </Text>
-              <Box
-                w={0.5}
-                h={0.5}
-                borderRadius={"full"}
-                bg={"gray.light"}
-              ></Box>
-              <Text color={"gray.light"} fontSize={"sm"}>
-                {post.likes.length} likes
-              </Text>
+              <Actions post={post}></Actions>
             </Flex>
           </Flex>
         </Flex>
