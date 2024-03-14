@@ -2,15 +2,19 @@ import {  Flex, Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import useShowToast from "../hooks/useShowToast";
 import Post from "../components/Post";
+import { useRecoilState } from "recoil";
+import postsAtom from "../components/atoms/postsAtom";
 
 const HomePage = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useRecoilState(postsAtom);
   const [loading, setLoading] = useState(true);
 
   const showToast = useShowToast();
 
   useEffect(() => {
     const getFeedPosts = async () => {
+      setLoading(true);
+      setPosts([]);
       try {
         const response = await fetch("/api/posts/feed");
         const responseData = await response.json();
@@ -26,7 +30,7 @@ const HomePage = () => {
       }
     };
     getFeedPosts();
-  }, [showToast]);
+  }, [showToast, setPosts]);
   return (
     <>
       {!loading && posts.length === 0 && <h1>No posts can be found.</h1>}
