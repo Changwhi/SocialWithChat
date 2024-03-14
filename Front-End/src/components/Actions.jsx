@@ -15,15 +15,16 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "./atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
+import postsAtom from "./atoms/postsAtom";
 
-const Actions = ({ post: post_ }) => {
+const Actions = ({ post }) => {
   const user = useRecoilValue(userAtom);
   const showToast = useShowToast();
-  const [liked, setLiked] = useState(post_.likes.includes(user?._id));
-  const [post, setPost] = useState(post_);
+  const [liked, setLiked] = useState(post.likes.includes(user?._id));
+  const [posts, setPosts] =useRecoilState(postsAtom);
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [reply, setReply] = useState("");
@@ -49,7 +50,13 @@ const Actions = ({ post: post_ }) => {
       if (responseData.error) {
         return showToast("Error", responseData.error, "error");
       }
-      setPost({ ...post, replies: [...post.replies, responseData.reply] });
+      const updatedPosts = posts.map((p)=>{
+        if(p._id === post._id){
+          return {...p, replies: [...p.replies, responseData]}
+        }
+        return p;
+      })
+      setPosts(updatedPosts);
       showToast("Succes", "Reply posted successfully", "success");
       onClose();
       setReply("");
@@ -80,9 +87,21 @@ const Actions = ({ post: post_ }) => {
       if (responseData.error)
         return showToast("Error", responseData.error, "error");
       if (!liked) {
-        setPost({ ...post, likes: [...post.likes, user._id] });
+      const updatedPosts = posts.map((p) => {
+        if (p.id === post.id) {
+          return {...p, likes:[...p.likes, user._id] };
+        }
+        return p;
+      })
+      setPosts(updatedPosts)
       } else {
-        setPost({ ...post, likes: post.likes.filter((id) => id !== user._id) });
+      const updatedPosts = posts.map((p) => {
+        if (p.id === post.id){
+          return {...p, likes: p.likes.filter((id) => id !== user._id)};
+        }
+        return p
+      })
+      setPosts(updatedPosts)
       }
 
       setLiked((prev) => !prev);
