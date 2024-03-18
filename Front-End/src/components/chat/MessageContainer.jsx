@@ -8,7 +8,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import Message from "./Mmessage";
+import Message from "./Message";
 import MessageInput from "./MessageInput";
 
 const MessageContainer = () => {
