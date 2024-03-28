@@ -5,7 +5,7 @@ async function sendMessage(req, res) {
   try {
     const { recipientId, text } = req.body;
     const senderId = req.user._id;
-
+    console.log("sendMessage", text)
     let conversation = await Conversation.findOne({
       participants: { $all: [senderId, recipientId] },
     });
@@ -69,14 +69,21 @@ async function getConversations(req, res) {
   const userId = req.user._id;
 
   try {
-    const conversation = await Conversation.find({
+    const conversations = await Conversation.find({
       participants: { $all: [userId] }, //Filter based on userId
     }).populate({
       //Bring more data based on the userId
       path: "participants",
       select: "username profilePic",
     });
-    res.status(200).json(conversation);
+
+    conversations.forEach((conversation)=>{
+      conversation.participants = conversation.participants.filter(
+        (participant) => participant._id.toString() !== userId.toString()
+        
+      )
+    });
+    res.status(200).json(conversations);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
