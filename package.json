@@ -2,10 +2,11 @@
   "name": "back-end",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
-    "start": "node server.js"
+    "dev": "NODE_ENV=development nodemon Back-End/server.js",
+    "start": "cross-env NODE_ENV=production node Back-End/server.js",
+    "build": "npm install && npm install --prefix Front-End && npm run build --prefix Front-End"
   },
   "type": "module",
   "keywords": [],
@@ -22,6 +23,7 @@
     "socket.io": "^4.7.5"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "^3.1.0"
   }
 }
