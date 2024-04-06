@@ -12,16 +12,24 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { selectedConversationAtom } from "../atoms/messagesAtom.js";
+import { WiMoonAltNew } from "react-icons/wi";
 
-const Conversation = ({conversation}) => {
-  const username = conversation.participants[0] ? conversation.participants[0].username: "Unknown";
-  const uid= conversation.participants[0] ? conversation.participants[0]._id:"Unknown";
-  const userAvatar = conversation.participants[0] ? conversation.participants[0].profilePic :"https://bit.ly/broken-link";
+const Conversation = ({ conversation, isOnline }) => {
+  const username = conversation.participants[0]
+    ? conversation.participants[0].username
+    : "Unknown";
+  const uid = conversation.participants[0]
+    ? conversation.participants[0]._id
+    : "Unknown";
+  const userAvatar = conversation.participants[0]
+    ? conversation.participants[0].profilePic
+    : "https://bit.ly/broken-link";
   const lastMessage = conversation.lastMessage;
-  const currentUser =  useRecoilValue(userAtom);
-  const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
+  const currentUser = useRecoilValue(userAtom);
+  const [selectedConversation, setSelectedConversation] = useRecoilState(
+    selectedConversationAtom
+  );
   const colorMode = useColorMode();
-  console.log("here/", lastMessage)
   return (
     <>
       <Flex
@@ -34,13 +42,20 @@ const Conversation = ({conversation}) => {
           color: "white",
         }}
         borderRadius={"md"}
-        onClick={() => setSelectedConversation({
-          _id: conversation._id,
-          userId:uid,
-          username: username,
-          userProfilePic: userAvatar,
-        })}
-        bg={selectedConversation?._id === conversation._id ? (colorMode === "light" ? "gray.400" : "gray.800" ) : "none"}
+        onClick={() =>
+          setSelectedConversation({
+            _id: conversation._id,
+            userId: uid,
+            username: username,
+            userProfilePic: userAvatar,
+            mock: conversation.mock,
+          })
+        }
+        bg={
+          (selectedConversation?._id === conversation._id
+            ? (colorMode.colorMode === "light" ? "gray.400" : "gray.800")
+            : "none")
+        }
       >
         <WrapItem>
           <Avatar
@@ -51,7 +66,7 @@ const Conversation = ({conversation}) => {
             }}
             src={userAvatar}
           >
-          <AvatarBadge boxSize={"1em"} bg={"green.500"} />
+            {isOnline ? <AvatarBadge boxSize={"1em"} bg={"green.500"} /> : ""}
           </Avatar>
         </WrapItem>
 
@@ -60,8 +75,14 @@ const Conversation = ({conversation}) => {
             {username} <Image src="/verified.png" w={4} h={4} ml={1} />
           </Text>
           <Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
-          {lastMessage.sender.toString() === currentUser._id.toString() ? "Me: " : username}
-          {lastMessage.text.length > 15 ? lastMessage.text.slice(0, 15) + "..." : lastMessage.text}
+            {currentUser._id === lastMessage.sender ? "": (lastMessage.seen ? "":<WiMoonAltNew />)}
+            
+            {lastMessage.sender.toString() === currentUser._id.toString()
+              ? "Me: "
+              : `${username}: `}
+            {lastMessage.text.length > 15
+              ? lastMessage.text.slice(0, 15) + "..."
+              : lastMessage.text}
           </Text>
         </Stack>
       </Flex>
