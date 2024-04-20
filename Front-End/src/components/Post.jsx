@@ -10,24 +10,27 @@ import userAtom from "./atoms/userAtom";
 import postsAtom from "./atoms/postsAtom";
 
 const Post = ({ post, postedBy }) => {
+  const ERROR = "Error";
+  const SUCCESS = "Success";
+
   const [user, setUser] = useState(null);
   const showToast = useShowToast();
   const navigate = useNavigate();
   const currentUser = useRecoilValue(userAtom);
   const [posts, setPosts] = useRecoilState(postsAtom);
-
+  
   useEffect(() => {
     const getUser = async () => {
       try {
         const response = await fetch("/api/users/profile/" + postedBy);
         const responseData = await response.json();
         if (responseData.error) {
-          showToast("Error", responseData.error, "error");
+          showToast(ERROR, responseData.error, "error");
           return;
         }
         setUser(responseData);
       } catch (error) {
-        showToast("Error", error, "error");
+        showToast(ERROR, error, "error");
         setUser(null);
       }
     };
@@ -44,13 +47,13 @@ const Post = ({ post, postedBy }) => {
       });
       const responseData = await response.json();
       if (responseData.error) {
-        showToast("Error", response.error, "error");
+        showToast(ERROR, response.error, "error");
         return;
       }
-      showToast("Success", "Post deleted", "success");
+      showToast(SUCCESS, "Post deleted", "success");
       setPosts(posts.filter((p) => p._id !== post._id));
     } catch (error) {
-      showToast("Error", error, "error");
+      showToast(ERROR, error, "error");
     }
   };
 
