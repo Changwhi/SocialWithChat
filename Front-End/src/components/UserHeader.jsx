@@ -18,8 +18,8 @@ import { CgMoreO } from "react-icons/cg";
 import { useRecoilValue } from "recoil";
 import userAtom from "./atoms/userAtom";
 import { Link as RouterLink } from "react-router-dom";
-import { useState } from "react";
 import useShowToast from "../hooks/useShowToast";
+import useFollowAndUnFollow from "../hooks/useFollowAndUnFollow";
 
 const UserHeader = ({ user }) => {
   const SUCCESS = "Success.";
@@ -28,56 +28,18 @@ const UserHeader = ({ user }) => {
   const COPYLINK = "Copy link";
   const THREADS = "Threads";
   const REPLIES = "Replies";
-  const ERROR = "Error.";
-  const NOT_LOGIN = "Please login first";
 
   const showToast = useShowToast();
   const currentUser = useRecoilValue(userAtom); // this is the logged in user
-  const [following, setFollowing] = useState(
-    user.followers.includes(currentUser?._id)
-  );
-  const [updating, setUpdating] = useState(false);
-
+  const { followHandler, updating, following } = useFollowAndUnFollow(user);
 
   const copyURL = () => {
     const currentURL = window.location.href;
     navigator.clipboard.writeText(currentURL).then(() => {
-      showToast(SUCCESS, COPIED, "success")
+      showToast(SUCCESS, COPIED, "success");
     });
   };
 
-  const followHandler = async() => {
-    if(!currentUser){ 
-      showToast(ERROR, NOT_LOGIN, 'error')
-      return
-    }
-    if(updating) return;
-    setUpdating(true);
-    try {
-      const response = await fetch(`/api/users/follow/${user._id}`, {
-        method: "POST", 
-        headers:{ "Content-Type": "application/json", }
-      })
-      const responseData = await response.json();
-      if(responseData.error){
-        showToast(ERROR, responseData.error, "error")
-        return
-      }
-      if(following){
-        showToast(SUCCESS, `Unfollowed ${user.name}`, "success");
-        user.followers.pop();
-      } else {
-        showToast(SUCCESS, `followed ${user.name}`, "success");
-        user.followers.push(currentUser?._id);
-      }
-      setFollowing((follow) => !follow);
-
-    } catch (error) {
-      showToast(ERROR, error, "error")
-    } finally{
-      setUpdating(false);
-    }
-  }
   return (
     <>
       <VStack gap={4} alignItems={"start"}>
@@ -129,7 +91,9 @@ const UserHeader = ({ user }) => {
           </Link>
         )}
         {currentUser?._id !== user._id && (
-          <Button onClick={followHandler} size={"sm"} isLoading={updating}>{following ? "Unfollow" : "Follow"}</Button>
+          <Button onClick={followHandler} size={"sm"} isLoading={updating}>
+            {following ? "Unfollow" : "Follow"}
+          </Button>
         )}
         <Flex w={"full"} justifyContent={"space-between"}>
           <Flex gap={2} alignItems={"center"}>
