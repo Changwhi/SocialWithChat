@@ -200,6 +200,35 @@ const getProfile = async (req, res) => {
   }
 };
 
+const getSuggestedUsers = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const usersFollowedByCurrentUser = await User.findById(userId).select(
+      "following"
+    );
+    const users = await User.aggregate([
+      {
+        $match: {
+          _id:{$ne:userId},
+        },
+      },
+      {
+        $sample: { size: 10 }
+      }
+    ]);
+
+    const filteredUsers = users.filter(user => !usersFollowedByCurrentUser.following.includes(user._id))
+    const suggestedUsers = filteredUsers.slice(0,4)
+
+    //remove password
+    suggestedUsers.forEach(user => user.password = null)
+
+    res.status(200).json(suggestedUsers);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 export {
   singUpUser,
   loginUser,
@@ -207,4 +236,5 @@ export {
   followAndUnfollow,
   updateUser,
   getProfile,
+  getSuggestedUsers
 };
