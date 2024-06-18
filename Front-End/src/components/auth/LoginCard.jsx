@@ -33,7 +33,7 @@ export default function LoginCard() {
       setLoading(true);
       try {
           const info = {
-              username: id,
+              email: id,
               password: password,
             }
 
