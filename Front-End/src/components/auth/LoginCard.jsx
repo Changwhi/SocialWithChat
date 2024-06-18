@@ -76,7 +76,7 @@ export default function LoginCard() {
           p={8}>
           <Stack spacing={4}>
             <FormControl  isRequired>
-              <FormLabel>User Name</FormLabel>
+              <FormLabel>Email</FormLabel>
               <Input type="text"
                   value={id}
                   onChange={(e) => {setId(e.target.value)}}
