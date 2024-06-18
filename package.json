@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon Back-End/server.js",
+    "dev": "cross-env NODE_ENV=development nodemon Back-End/server.js",
     "start": "cross-env NODE_ENV=production node Back-End/server.js",
     "build": "npm install && npm install --prefix Front-End && npm run build --prefix Front-End"
   },
