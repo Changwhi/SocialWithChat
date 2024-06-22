@@ -1,5 +1,5 @@
 import { Box, Container } from "@chakra-ui/react"
-import { Navigate, Route, Routes, useLocation } from "react-router-dom"
+import { Navigate, Route, Routes} from "react-router-dom"
 import UserPage from "./pages/UserPage"
 import PostPage from "./pages/PostPage"
 import Header from "./components/Header"
@@ -8,7 +8,6 @@ import AuthPage from "./pages/AuthPage"
 import { useRecoilValue } from "recoil"
 import userAtom from "./components/atoms/userAtom"
 import UpdateProfilePage from "./pages/UpdateProfilePage"
-import CreatePost from "./components/CreatePost"
 import ChatPage from "./pages/ChatPage"
 
 function App() {
