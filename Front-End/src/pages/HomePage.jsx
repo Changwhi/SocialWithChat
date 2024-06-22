@@ -1,4 +1,13 @@
-import {  Box, Flex, Spinner } from "@chakra-ui/react";
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Flex,
+  Spinner,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import useShowToast from "../hooks/useShowToast";
 import Post from "../components/Post";
@@ -35,26 +44,45 @@ const HomePage = () => {
     getFeedPosts();
   }, [showToast, setPosts]);
   return (
-    <Flex gap='10' alignItems={"flex-start"}>
-      <Box flex={70}>
-
-      {!loading && posts.length === 0 && <h1>{NO_POSTS}</h1>}
-      {loading && (
-        <Flex justify={"center"}>
-          <Spinner size={"xl"} />
-        </Flex>
-      )}
-      {posts.map((post)=>(
-          <Post key={post._id} post={post} postedBy={post.postedBy} />
-      ))}
-
-      </Box>
-      <Box flex={30}
-        display={{ base: "none", md: "block" }}
+    <Flex
+      gap="10"
+      flexDirection={{ base: "column", md: "row" }}
+      alignItems={{ base: "center", md: "flex-start" }}
+    >
+      <Box
+        display={{ base: "block", md: "none" }}
       >
-        <SuggestedUsers></SuggestedUsers>
+        <Accordion defaultIndex={[0]} allowMultiple>
+          <AccordionItem>
+            <h2>
+              <AccordionButton>
+                <Box as="span" flex="1" textAlign="left">
+                  Suggested Users
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              <SuggestedUsers />
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
       </Box>
 
+      <Box flex={70}>
+        {!loading && posts.length === 0 && <h1>{NO_POSTS}</h1>}
+        {loading && (
+          <Flex justify={"center"}>
+            <Spinner size={"xl"} />
+          </Flex>
+        )}
+        {posts.map((post) => (
+          <Post key={post._id} post={post} postedBy={post.postedBy} />
+        ))}
+      </Box>
+      <Box flex={30} display={{ base: "none", md: "block" }}>
+        <SuggestedUsers />
+      </Box>
     </Flex>
   );
 };
