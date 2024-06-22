@@ -49,7 +49,7 @@ const UserPage = () => {
   return (
     <>
       <UserHeader user={user} />
-      {!fetchingPosts && posts.length === 0 && <h1>No posts</h1>}
+      {!fetchingPosts && posts.length === 0 && <h1>You have no posts, please create one!</h1>}
       {fetchingPosts && (
         <Flex justifyContent={"center"} my={12}>
           <Spinner size={"xl"} />
