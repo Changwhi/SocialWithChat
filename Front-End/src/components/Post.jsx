@@ -125,7 +125,6 @@ const Post = ({ post, postedBy }) => {
                 >
                   {user?.username}
                 </Text>
-                <Image src="/verified.png" w={4} h={4} ml={1} />
               </Flex>
               <Flex gap={4} alignItems={"center"}>
                 <Text
