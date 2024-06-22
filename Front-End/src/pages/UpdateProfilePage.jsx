@@ -148,6 +148,7 @@ export default function UpdateProfilePage() {
               _hover={{
                 bg: "red.500",
               }}
+              onClick={() => window.history.go(-1)}
             >
               Cancel
             </Button>
