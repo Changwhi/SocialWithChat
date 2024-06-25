@@ -45,7 +45,7 @@ export default function UpdateProfilePage() {
       });
       const responseData = await response.json();
       if(responseData.error){
-        showToast("Error", responseData.error, 'error');
+        showToast("Error", "Something went wrong in front end" + responseData.error, 'error');
         return;
       }
       showToast("Success", "Profile updated!", 'success');
