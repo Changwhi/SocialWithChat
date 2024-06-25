@@ -1,9 +1,15 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { ViteFaviconsPlugin } from "vite-plugin-favicon";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), 
+      ViteFaviconsPlugin({
+      logo: "dist/assets/icon.svg",
+    }),
+  ],
+
   server:{
     port: 5000,
   proxy: {
