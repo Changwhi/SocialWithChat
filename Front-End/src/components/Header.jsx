@@ -19,23 +19,11 @@ const Header = () => {
   return (
     <>
       <Flex justifyContent={"space-between"} mt={6} mb={12}>
-        {user && (
           <Link cursor={"pointer"} as={RouterLink} to={"/"}>
             <Text fontWeight={"bold"} fontSize={{ base: "large", md: "2xl" }}>
               Post & Chat
             </Text>
           </Link>
-        )}
-        {!user && (
-          <Link
-            as={RouterLink}
-            to={"/auth"}
-            onClick={() => setAuthScreen("login")}
-            fontSize={"xl"}
-          >
-            Login
-          </Link>
-        )}
         {user && (
           <Flex alignItems={"center"} gap={{ base: 3, md: 6 }}>
             <Link cursor={"pointer"} as={RouterLink} to={"/"}>
@@ -97,6 +85,16 @@ const Header = () => {
         )}
 
         {!user && (
+          <>
+          <Flex alignItems={"center"} gap={{ base: 3, md: 6 }}>
+          <Link
+            as={RouterLink}
+            to={"/auth"}
+            onClick={() => setAuthScreen("login")}
+            fontSize={"xl"}
+          >
+            Login
+          </Link>
           <Link
             as={RouterLink}
             to={"/auth"}
@@ -107,6 +105,8 @@ const Header = () => {
           >
             Sign up
           </Link>
+          </Flex>
+          </>
         )}
       </Flex>
     </>
