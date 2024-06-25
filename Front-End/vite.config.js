@@ -6,7 +6,7 @@ import { ViteFaviconsPlugin } from "vite-plugin-favicon";
 export default defineConfig({
   plugins: [react(), 
       ViteFaviconsPlugin({
-      logo: "dist/assets/icon.svg",
+      logo: "src/icon.svg",
     }),
   ],
 
