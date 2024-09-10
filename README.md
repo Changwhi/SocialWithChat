@@ -2,6 +2,23 @@
 
 This project is a social media application with real-time chat feature built using Node.js, MongoDB, Express.js, and React.
 
+## Demo
+
+### Log in
+![Log-in](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExajMwNzZvNnNkZTJ2aXRmbzB4czNnamprejFjNTl1ZG8zemljZGJuYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pKF3Jg5zuBGd21JWxY/giphy.gif)
+
+### Real time Chat
+![Chat](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExemFmbTd3Z3Fxam44Z21tNG5nYnhjMmZueDl1Z3JpMHhwYjk1NXpyNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Yf9PMwGynbaAmagFR8/giphy.gif)
+
+### Posting
+![Posting](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGRnNmdsMnd6OTN4cThvbHFya3lpNG12Y2RrazFxZHJsMWQyNWJ5dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yxIeuKAB0mzHbvXwQk/giphy.gif)
+
+### Like button
+![LikeButton](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXl2Y3hldno0cDl6ejJsZXhmN3Zvd2x0ZG42ZWdxZGsxYzg3bzdmcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/apcQqnrZs8rrlXipcS/giphy.gif)
+
+### Comment
+![Comment](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExcnFmMWI5bTNlODVnb3g2Zzdkenl0ZzE4cHVrOWs0NWZwMGI2OWhvbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hwGLV7IVhyDH2YbOuG/giphy.gif)
+
 ## ✨ Features
 
 - User authentication and authorization
@@ -12,10 +29,11 @@ This project is a social media application with real-time chat feature built usi
 
 ## 🚀 Technologies Used
 
-- **Frontend**: React.js, Chakra UI
+- **Frontend**: React.js, Chakra UI, TailwindCSS
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
 - **Real-Time Communication**: Socket.IO
+- **Authentication**: JWT (JSON Web Tokens)
 - **Deployment**: Render
 
 ## 📦 Installation
